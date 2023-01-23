@@ -65,10 +65,14 @@ public class LoginController {
      * ログイン成功後のメニュー画面遷移処理
      */
     @GetMapping("/menu")
+    public String menu(Model model) {
+        return "menu/menu";
+    }
+
     // ハンドラメソッドの引数でOIDC、OAuth関連データを取得する例
+    @GetMapping("/menu_oauth")
     public String menu(@AuthenticationPrincipal OidcUser oidcUser, OAuth2AuthenticationToken oAuth2AuthenticationToken,
             Model model) {
-//　 public String menu(Model model) {
         if (oidcUser != null) {
             // IDトークンの取得
             String idToken = oidcUser.getIdToken().getTokenValue();

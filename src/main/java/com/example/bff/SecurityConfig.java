@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .permitAll())
             // OAuth認証によるログイン処理
             .oauth2Login(login -> login.loginPage("/oauth-home")  // ログインページの指定
-                    .defaultSuccessUrl("/menu", true)
+                    .defaultSuccessUrl("/menu_oauth", true)
                     .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userAuthoritiesMapper(authoritiesMapper())))  // ログイン成功後の遷移先
                 // ログアウト処理
                 .logout(logout -> logout.logoutUrl("/logout") // ログアウトのURL
