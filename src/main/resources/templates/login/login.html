@@ -25,7 +25,7 @@
                 <div class="invalid-feedback" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></div>
                 <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                 
-                <a th:href="@{/oauth-home}" >外部のIdPでログイン</a>  
+                <a th:href="@{/oauth-home}" >外部のIDプロバイダでログイン</a>  
                           
                 <!-- ログインボタン -->
                 <div class="d-grid">

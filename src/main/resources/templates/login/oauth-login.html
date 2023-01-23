@@ -1,45 +1,43 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/template :: layout(~{::title/content()},~{::.container/content()}, ~{})}">
 
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Spring Security OAuth2 Demo</title>
-
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+	<title>Todo管理アプリ</title>
 </head>
 
-<body>
-	<section class="section">
-		<div class="container has-text-centered">
-			<div>
-				<h1 class="title">AWS Cognito Spring Security Demo</h1>
-
-				<div sec:authorize="isAuthenticated()">
-					<div class="box">
-						<div>
-							Hello, <strong th:text="${#authentication.name}"></strong>!
-							<span sec:authentication="principal.attributes['email']"></span>
-						</div>
-						<div>
-							<a class="button loging is-primary" th:href="@{/logout}">Logout</a>
-						</div>
-					</div>
+<body class="bg-light">	
+	<div class="container">
+		<div class="text-center">
+			<div sec:authorize="isAuthenticated()">
+				<div>
+					<span th:text="${#authentication.name}"></span>さんでログイン済みです。
+					<!--/*<span sec:authentication="principal.attributes['email']"></span>*/-->
 				</div>
+				<div>
+					<form method="post" th:action="@{/logout}">
+						<button class="mt-5 btn btn-primary btn-lg" type="submit">ログアウト</button>
+					</form>
+				</div>
+			</div>
 
-				<div sec:authorize="isAnonymous()">
-					<div class="box">
-						<a class="button login is-primary" th:href="@{/oauth2/authorization/cognito}">Log in with AWS
-							Cognito</a>
-						<a class="button loging is-primary" th:href="@{/oauth2/authorization/github}">Log in with
-							Github</a>
-						<a class="button loging is-primary" th:href="@{/oauth2/authorization/google}">Log in with
-							Google</a>
-					</div>
+			<div sec:authorize="isAnonymous()">
+				<h2>外部のIDプロバイダでログイン</h2>
+				<div class="d-grid gap-2">
+					<a class="mt-5 btn btn-primary btn-lg" th:href="@{/oauth2/authorization/cognito}">AWS
+						Cognitoでログイン</a>
+					<a class="mt-5 btn btn-primary btn-lg" th:href="@{/oauth2/authorization/github}">Githubでログイン</a>
+					<a class="mt-5 btn btn-primary btn-lg" th:href="@{/oauth2/authorization/google}">Googleでログイン</a>
 				</div>
 			</div>
 		</div>
-	</section>
+		<div class="text-end">
+			<a class="mt-5 btn btn-outline-primary" th:href="@{/}">トップ画面に戻る</a>
+		</div>
+	</div>
 </body>
+
+
 
 </html>
