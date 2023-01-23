@@ -1,7 +1,9 @@
-# ユーザ認証を使ったSpringBoot/Spring Security OAuth2.0のアプリケーションのサンプル
+# SpringBoot/Spring Security OAuth2.0のユーザ認証のアプリケーションのサンプル
 
 ## サンプル概要
-* 以下のIdPで、OAuth2.0 Login(OIDC)が可能となっている。
+* Form認証と、OAuthログイン（OIDC）の両方が使えるようになっている。
+* Form認証はユーザテーブルのデータを用いてログインできる
+* OAuthログイン(OIDC）については、以下のIdPで、OAuth2.0 Login(OIDC)が可能となっている。
     * GitHub
     * Google
     * Cognito
