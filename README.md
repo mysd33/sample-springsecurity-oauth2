@@ -76,7 +76,7 @@
     * client-idに生成されたクライアントIDを設定
     * client-secretに生成されたクライアントシークレットを設定
 ## アプリケーション起動
-* SpringBootのアプリケーションを起動し、http://localhost:8080にアクセス
+* SpringBootのアプリケーションを起動し、http://localhost:8080 にアクセス
 * 「Log in with AWS Cognito」のボタンをクリックするとCognitoの認証画面へ遷移
 * ログインに成功すると、アプリケーションの画面に戻ってきてユーザ名、メールアドレスを表示
 
