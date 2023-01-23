@@ -7,7 +7,7 @@
 	<title>Todo管理アプリ</title>
 </head>
 
-<body class="bg-light">	
+<body class="bg-light">
 	<div class="container">
 		<div class="text-center">
 			<div sec:authorize="isAuthenticated()">
@@ -15,11 +15,10 @@
 					<span th:text="${#authentication.name}"></span>さんでログイン済みです。
 					<!--/*<span sec:authentication="principal.attributes['email']"></span>*/-->
 				</div>
-				<div>
-					<form method="post" th:action="@{/logout}">
-						<button class="mt-5 btn btn-primary btn-lg" type="submit">ログアウト</button>
-					</form>
-				</div>
+				<a class="mt-5 btn btn-primary" th:href="@{/menu}">メニュー画面</a>
+				<form method="post" th:action="@{/logout}">
+					<button class="mt-5 btn btn-primary" type="submit">ログアウト</button>
+				</form>
 			</div>
 
 			<div sec:authorize="isAnonymous()">
