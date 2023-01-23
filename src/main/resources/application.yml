@@ -1,0 +1,39 @@
+spring:    
+  application:
+    name: sample-oauth2
+  profiles:
+    active:
+    - dev
+    - log_default  #logging in default format
+#    - log_container  #logging in json format
+  security:
+    filter:
+      dispatcher-types:
+        - async
+        - error
+        - request        
+        - forward 
+    oauth2:
+      client:
+        provider:
+          cognito:
+            issuerUri: https://cognito-idp.{region}.amazonaws.com/{Pool Id}
+            user-name-attribute: username
+        registration:
+          cognito:
+            client-id: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            client-secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            clientName: sample-springsecurity-cognito
+            redirect-uri: http://localhost:8080/login/oauth2/code/cognito
+            scope: openid
+          github:
+            clientId: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            clientSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          google:
+            client-id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            client-secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+     
+mybatis:
+  type-aliases-package: com.example.bff.domain.model     
+  configuration:
+    map-underscore-to-camel-case: true            
