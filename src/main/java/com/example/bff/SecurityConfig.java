@@ -1,13 +1,22 @@
 package com.example.bff;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
@@ -15,9 +24,9 @@ public class SecurityConfig {
     // Spring Securityのデバッグモード
     @Value("${spring.websecurity.debug:false}")
     boolean webSecurityDebug;
-    
-	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // @formatter:off
             // フォーム認証によるログイン処理
         http.formLogin(login -> login.loginProcessingUrl("/authenticate") // ログイン処理のパス
@@ -29,7 +38,8 @@ public class SecurityConfig {
                 .permitAll())
             // OAuth認証によるログイン処理
             .oauth2Login(login -> login.loginPage("/oauth-home")  // ログインページの指定
-                    .defaultSuccessUrl("/menu", true))  // ログイン成功後の遷移先
+                    .defaultSuccessUrl("/menu", true)
+                    .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userAuthoritiesMapper(authoritiesMapper())))  // ログイン成功後の遷移先
                 // ログアウト処理
                 .logout(logout -> logout.logoutUrl("/logout") // ログアウトのURL
                         .logoutSuccessUrl("/")) // ログアウト成功後のURL
@@ -54,21 +64,27 @@ public class SecurityConfig {
            
                 // REST APIはCSRF保護不要
                 .csrf().ignoringAntMatchers("/api/**");
-        
-        
-        // 
-		/*http.csrf()
-			.and()
-			.authorizeHttpRequests(authz -> 
-				authz.mvcMatchers("/").permitAll()
-				.anyRequest().authenticated())
-			.oauth2Login()
-			.and()
-			.logout()
-			.logoutSuccessUrl("/");*/
-			
-		return http.build();
-	}
+        // @formatter:on               		
+        return http.build();
+    }
+
+    private GrantedAuthoritiesMapper authoritiesMapper() {
+        return authorities -> {
+            List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+            for (GrantedAuthority grantedAuthority : authorities) {
+                grantedAuthorities.add(grantedAuthority);
+                // CognitoでisAdminカスタム属性を定義したものに対して、値が1なら管理者ロール扱い
+                if (grantedAuthority instanceof OidcUserAuthority oidcUserAuthority) {
+                    Map<String, Object> attributes = oidcUserAuthority.getAttributes();
+                    String isAdmin = (String) attributes.get("custom:isAdmin");
+                    if (Objects.nonNull(isAdmin) && Objects.equals(isAdmin, "1")) {
+                        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                    }
+                }
+            }
+            return grantedAuthorities;
+        };
+    }
 
     /**
      * H2 Consoleのアクセス許可対応
@@ -90,7 +106,7 @@ public class SecurityConfig {
         // @formatter:on        
         return http.build();
     }
-    
+
     /**
      * パスワードエンコーダ
      */
